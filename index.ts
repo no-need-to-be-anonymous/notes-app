@@ -1,12 +1,15 @@
-import express from 'express'
+import 'reflect-metadata'
+import { InversifyExpressServer } from 'inversify-express-utils'
+import DIContainer from './inversify/inversify.config'
+import * as bodyParser from 'body-parser'
 
 const PORT = 8000
-const app = express()
 
-app.listen(PORT, async () => {
-   /* eslint-disable-next-line */
-   console.log(`Server is running on ${PORT} port`)
-}).on('error', (err) => {
-   /* eslint-disable-next-line */
-   console.log(`Server error occured ${err}`)
+const server = new InversifyExpressServer(DIContainer)
+
+server.setConfig((app) => {
+   app.use(bodyParser.json())
 })
+
+const app = server.build()
+app.listen(PORT)
