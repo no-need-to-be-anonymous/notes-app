@@ -11,7 +11,10 @@
       "start": "node dist/index.js",
       "prisma:migrate": "npx prisma migrate dev",
       "prettier:format": "prettier --write .",
-      "eslint:format": "eslint . --ext .ts,.js"
+      "eslint:format": "eslint . --ext .ts,.js",
+      "docker:up": "docker compose up",
+      "docker:up-rebuild": "docker compose down; docker compose up --renew-anon-volumes --build --force-recreate backend",
+      "docker:down": "docker compose down;"
    },
    "devDependencies": {
       "@types/express": "^4.17.14",
