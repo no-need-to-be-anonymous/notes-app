@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+   backend:
+      build: .
+      ports:
+         - '8000:8000'
+      depends_on:
+         - database
+      env_file:
+         - .env
+      command: ['npm', 'run', 'dev']
+      volumes:
+         - .:/app
+         - /app/node_modules
+   database:
+      image: postgres:13-alpine
+      restart: always
+      environment:
+         - POSTGRES_USER=postgres
+         - POSTGRES_PASSWORD=postgres
+      ports:
+         - '5433:5432'
+      volumes:
+         - note_db:/var/lib/postgresql/data
+
+volumes:
+   note_db: {}
