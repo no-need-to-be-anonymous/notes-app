@@ -1,8 +1,9 @@
 import 'reflect-metadata'
 import { InversifyExpressServer } from 'inversify-express-utils'
 import DIContainer from './inversify/inversify.config'
-import * as bodyParser from 'body-parser'
 import './modules/category/category.controller'
+import * as bodyParser from 'body-parser'
+import { errorConfig } from './helpers/errorConfig'
 
 const PORT = 8000
 
@@ -12,15 +13,7 @@ server.setConfig((app) => {
    app.use(bodyParser.json())
 })
 
-server.setErrorConfig((app) => {
-   app.use((err, req, res, next) => {
-      if (err instanceof Error) {
-         res.send(err.message)
-      }
-
-      res.status(500).send('Something went wrong')
-   })
-})
+server.setErrorConfig(errorConfig)
 
 const app = server.build()
 app.listen(PORT, () => {

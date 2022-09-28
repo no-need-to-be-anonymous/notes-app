@@ -17,7 +17,8 @@ export class CategoryController extends BaseHttpController {
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
-         return res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errors: errors.array() })
+         res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errors: errors.array() })
+         return
       }
 
       const { name, user_id } = req.body
@@ -27,6 +28,7 @@ export class CategoryController extends BaseHttpController {
       }
 
       await this.categoryService.create(data)
-      return res.send({ created: true })
+      res.send({ created: true })
+      return
    }
 }

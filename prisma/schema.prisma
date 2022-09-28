@@ -26,6 +26,8 @@ model category {
   user_id Int
   subcategories subcategory[]
   notes note[]
+
+  @@unique([user_id, name])
 }
 
 model subcategory {
