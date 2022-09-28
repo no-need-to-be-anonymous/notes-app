@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+   title: Notes app API
+   description: This is notes app API
+   version: 1.0.0
+
+servers:
+   - url: http://localhost:8000/api
+     description: Some
+
+paths:
+   /category:
+      title: category
+      post:
+         summary: Create category for notes
+         tags:
+            - Category
+         requestBody:
+            description: Category request body
+            required: true
+            content:
+               application/json:
+                  schema:
+                     type: object
+                     properties:
+                        name:
+                           type: string
+                           example: Education
+                        user_id:
+                           type: number
+                           example: 1
+                     required:
+                        - name
+                        - user_id
+         responses:
+            '201':
+               description: category is created
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              description: created
+                              example: created
+            '400':
+               description: bad request
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              example: Bad request
+            '422':
+               description: invalid request body
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              example: Invalid request body
+            '500':
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              example: Someting went wrong

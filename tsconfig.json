@@ -10,7 +10,8 @@
       "baseUrl": "./",
       "esModuleInterop": true,
       "experimentalDecorators": true,
-      "emitDecoratorMetadata": true
+      "emitDecoratorMetadata": true,
+      "types": ["reflect-metadata", "swagger-express-ts"]
    },
    "exclude": ["node_modules", "dist"]
 }

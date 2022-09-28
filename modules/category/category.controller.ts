@@ -17,7 +17,7 @@ export class CategoryController extends BaseHttpController {
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
-         res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errors: errors.array() })
+         res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ message: 'Invalid request body' })
          return
       }
 
@@ -28,7 +28,6 @@ export class CategoryController extends BaseHttpController {
       }
 
       await this.categoryService.create(data)
-      res.send({ created: true })
-      return
+      return res.status(HttpStatus.CREATED).send({ created: true })
    }
 }
