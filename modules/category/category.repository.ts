@@ -1,5 +1,6 @@
 import { PrismaClient } from '.prisma/client'
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
+import { TYPES } from '../../inversify/types'
 import { CreateCategory } from './category.types'
 
 export interface ICategoryRepository {
@@ -8,19 +9,18 @@ export interface ICategoryRepository {
 
 @injectable()
 export class CategoryRepo implements ICategoryRepository {
-   constructor(private prisma: PrismaClient) {
-      this.prisma = prisma
-   }
+   @inject(TYPES.PrismaClient) private readonly prisma: PrismaClient
 
-   async create(category: CreateCategory) {
+   async create({ name, user_id }: CreateCategory) {
       const newCategory = await this.prisma.category.create({
          data: {
-            user_id: 0,
-            name: 'fsdf',
+            name,
+            user: {
+               connect: { id: user_id },
+            },
          },
       })
 
-      console.log('newCategory prisma', newCategory)
-      return true
+      return newCategory ? true : false
    }
 }

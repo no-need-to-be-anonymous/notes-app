@@ -10,39 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
+model users {
   id Int @id @default(autoincrement())
   email String @unique
   categories category[]
+  created_at DateTime @default(now())
 }
 
 model category {
-  id Int @id
+  id Int @id @default(autoincrement())
   name String
-  created_at DateTime
-  updated_at DateTime
-  user user @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  user users @relation(fields: [user_id], references: [id])
   user_id Int
   subcategories subcategory[]
   notes note[]
 }
 
 model subcategory {
-  id Int @id
+  id Int @id @default(autoincrement())
   name String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
   category category @relation(fields: [category_id], references: [id])
   category_id Int
   note note[]
 }
 
 model note {
-  id Int @id
+  id Int @id @default(autoincrement())
   title String
   text String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
   tags String[]
   subcategory subcategory? @relation(fields: [subcategory_id], references: [id])
   subcategory_id Int?  

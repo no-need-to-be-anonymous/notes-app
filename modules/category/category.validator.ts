@@ -1,16 +1,6 @@
-import { checkSchema } from 'express-validator'
+import { body } from 'express-validator'
 
-export const categoryBody = checkSchema({
-   name: {
-      isString: true,
-      notEmpty: true,
-      errorMessage: 'Category name should be provided',
-      in: ['body'],
-   },
-   user_id: {
-      isString: true,
-      notEmpty: true,
-      errorMessage: 'User id should be provided',
-      in: ['body'],
-   },
-})
+export const checkCategoryBody = [
+   body('name').isString().notEmpty().withMessage('Category name should be provided'),
+   body('user_id').isInt().notEmpty().withMessage('User id should be provided'),
+]
