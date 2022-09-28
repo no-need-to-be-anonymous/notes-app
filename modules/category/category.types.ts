@@ -7,3 +7,4 @@ export interface CategoryModel {
 }
 
 export type CreateCategory = Pick<CategoryModel, 'name' | 'user_id'>
+export type CreateCategoryResponse = Pick<CategoryModel,'id'>

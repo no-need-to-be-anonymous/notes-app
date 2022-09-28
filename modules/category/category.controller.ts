@@ -5,7 +5,7 @@ import { inject } from 'inversify'
 import { BaseHttpController, controller, httpPost } from 'inversify-express-utils'
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
-import { CreateCategory } from './category.types'
+import { CreateCategory, CreateCategoryResponse } from './category.types'
 import { checkCategoryBody } from './category.validator'
 
 @controller('/category')
@@ -13,7 +13,10 @@ export class CategoryController extends BaseHttpController {
    @inject(TYPES.ICategoryService) private readonly categoryService: ICategoryService
 
    @httpPost('/', ...checkCategoryBody)
-   async create(req: Request<unknown, unknown, CreateCategory>, res: Response): Promise<unknown> {
+   async create(
+      req: Request<unknown, unknown, CreateCategory>,
+      res: Response
+   ): Promise<CreateCategoryResponse> {
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -27,7 +30,7 @@ export class CategoryController extends BaseHttpController {
          user_id,
       }
 
-      await this.categoryService.create(data)
-      return res.status(HttpStatus.CREATED).send({ created: true })
+      const newCategory = await this.categoryService.create(data)
+      res.status(HttpStatus.CREATED).json(newCategory)
    }
 }
