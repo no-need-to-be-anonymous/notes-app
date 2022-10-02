@@ -11,7 +11,7 @@ export interface ICategoryRepository {
 export class CategoryRepo implements ICategoryRepository {
    @inject(TYPES.PrismaClient) private readonly prisma: PrismaClient
 
-   async create({ name, user_id }: CreateCategory) {
+   async create({ name, user_id }: CreateCategory): Promise<CreateCategoryResponse> {
       return await this.prisma.category.create({
          data: {
             name,
