@@ -5,6 +5,7 @@ import { CreateCategory, CreateCategoryResponse } from './category.types'
 
 export interface ICategoryRepository {
    create(data: CreateCategory): Promise<CreateCategoryResponse>
+   getOne(name: string, user_id: number): Promise<boolean>
 }
 
 @injectable()
@@ -23,5 +24,16 @@ export class CategoryRepo implements ICategoryRepository {
             id: true,
          },
       })
+   }
+
+   async getOne(name: string, user_id: number): Promise<boolean> {
+      const category = await this.prisma.category.findFirst({
+         where: {
+            user_id,
+            name,
+         },
+      })
+
+      return category ? true : false
    }
 }

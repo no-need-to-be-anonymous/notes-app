@@ -1,22 +1,16 @@
-import { Prisma } from '@prisma/client'
 import { ConfigFunction } from 'inversify-express-utils'
+import { EXCEPTION_MESSAGE } from './exceptionMessages'
+import { HttpException } from './httpException.helper'
 import { HttpStatus } from './httpStatus'
 
 export const errorConfig: ConfigFunction = (app) => {
-   app.use((error, req, res, next) => {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-         // "Unique constraint failed on the {constraint}"
-         if (error.code === 'P2002') {
-            return res
-               .status(HttpStatus.BAD_REQUEST)
-               .send({ message: 'Cannot create duplicated value' })
-         }
+   app.use((error, _, res, __) => {
+      if (error instanceof HttpException) {
+         return res.status(error.status).json({ message: error.message })
       }
 
-      if (error instanceof Error) {
-         return res.send(error.message)
-      }
-
-      return res.status(500).send('Something went wrong')
+      return res
+         .status(HttpStatus.INTERNAL_SERVER_ERROR)
+         .json({ message: EXCEPTION_MESSAGE.SERVER.INTERNAL_SERVER_ERROR })
    })
 }
