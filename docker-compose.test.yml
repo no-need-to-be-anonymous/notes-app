@@ -2,27 +2,31 @@ version: '3'
 
 services:
    backend:
-      build: .
+      build:
+         context: .
+         args:
+            - POSTGRES_HOST=host.docker.internal
+      container_name: backend-test
       ports:
          - '8000:8000'
       depends_on:
-         - database
-      env_file:
-         - .env
-      command: ['yarn', 'run', 'dev']
+         - postgres
+      command: ['yarn', 'run', 'test']
       volumes:
          - .:/app
          - /app/node_modules
    database:
+      container_name: postgres
       image: postgres:13-alpine
       restart: always
       environment:
          - POSTGRES_USER=postgres
          - POSTGRES_PASSWORD=postgres
+         - POSTGRES_DB=notes-test
       ports:
          - '5433:5432'
       volumes:
-         - note_db:/var/lib/postgresql/data
+         - note_db_test:/var/lib/postgresql/data
 
 volumes:
-   note_db: {}
+   note_db_test: {}
