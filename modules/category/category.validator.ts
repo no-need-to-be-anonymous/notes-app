@@ -1,4 +1,5 @@
 import { body, query } from 'express-validator'
+import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 
 export const checkCategoryBody = [
    body('name').isString().notEmpty().withMessage('Category name should be provided'),
@@ -6,5 +7,5 @@ export const checkCategoryBody = [
 ]
 
 export const checkCategoryUserIdQuery = [
-   query('user_id').notEmpty().withMessage('Invalid user_id query parameter'),
+   query('user_id').notEmpty().withMessage(EXCEPTION_MESSAGE.CATEGORY.MISSING_USER_ID),
 ]

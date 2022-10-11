@@ -5,7 +5,7 @@ import { CategoryModel, CreateCategory, CreateCategoryResponse, Categories } fro
 
 export interface ICategoryRepository {
    create(data: CreateCategory): Promise<CreateCategoryResponse>
-   readAll(user_id: CategoryModel['user_id']): Promise<Omit<CategoryModel, 'user_id'>[]>
+   readAll(user_id: CategoryModel['user_id']): Promise<Categories>
    getOne(name: string, user_id: number): Promise<boolean>
 }
 
@@ -33,7 +33,6 @@ export class CategoryRepo implements ICategoryRepository {
             name: true,
             created_at: true,
             id: true,
-            updated_at: true,
          },
          where: {
             user_id,

@@ -2,7 +2,13 @@ import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { HttpStatus } from '../../helpers/httpStatus'
 import { inject } from 'inversify'
-import { BaseHttpController, controller, httpGet, httpPost, interfaces } from 'inversify-express-utils'
+import {
+   BaseHttpController,
+   controller,
+   httpGet,
+   httpPost,
+   interfaces,
+} from 'inversify-express-utils'
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
 import { CreateCategory, CreateCategoryResponse } from './category.types'
@@ -10,7 +16,7 @@ import { checkCategoryBody, checkCategoryUserIdQuery } from './category.validato
 import { HttpException } from '../../helpers/httpException.helper'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 
-@controller('/category')
+@controller('')
 export class CategoryController extends BaseHttpController implements interfaces.Controller {
    @inject(TYPES.ICategoryService) private readonly categoryService: ICategoryService
 
@@ -52,6 +58,6 @@ export class CategoryController extends BaseHttpController implements interfaces
 
       const categories = await this.categoryService.readAll(Number(userId))
 
-      res.status(HttpStatus.ACCEPTED).json(categories)
+      res.status(HttpStatus.OK).json(categories)
    }
 }
