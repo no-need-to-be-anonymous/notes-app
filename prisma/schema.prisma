@@ -11,7 +11,7 @@ datasource db {
 }
 
 model users {
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) 
   email String @unique
   categories category[]
   created_at DateTime @default(now())
@@ -22,12 +22,13 @@ model category {
   name String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  user users @relation(fields: [user_id], references: [id])
+  user users @relation(fields: [user_id], references: [id],onDelete: Cascade) 
   user_id Int
   subcategories subcategory[]
   notes note[]
 
   @@unique([user_id, name])
+  
 }
 
 model subcategory {
@@ -35,7 +36,7 @@ model subcategory {
   name String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  category category @relation(fields: [category_id], references: [id])
+  category category @relation(fields: [category_id], references: [id],onDelete: Cascade)
   category_id Int
   note note[]
 }
@@ -47,9 +48,9 @@ model note {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   tags String[]
-  subcategory subcategory? @relation(fields: [subcategory_id], references: [id])
+  subcategory subcategory? @relation(fields: [subcategory_id], references: [id], onDelete: Cascade)
   subcategory_id Int?  
-  category category? @relation(fields: [category_id], references: [id])
+  category category? @relation(fields: [category_id], references: [id], onDelete: Cascade)
   category_id Int?
 }
 

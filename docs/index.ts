@@ -19,9 +19,10 @@ export default swaggerJSDoc({
       },
       servers: [
          {
-            url: 'http://localhost:3000/api',
+            url: 'http://localhost:8000/api',
          },
       ],
+      
    },
    apis: [path.resolve('docs/documentation.yml')],
 })

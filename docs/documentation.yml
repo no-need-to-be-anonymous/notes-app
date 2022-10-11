@@ -34,7 +34,18 @@ paths:
                         - user_id
          responses:
             '201':
-               description: category is created
+               description: id of created category
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           id:
+                              type: number
+                              description: created category id
+                              example: 123
+            '409':
+               description:
                content:
                   application/json:
                      schema:
@@ -42,18 +53,7 @@ paths:
                         properties:
                            message:
                               type: string
-                              description: created
-                              example: created
-            '400':
-               description: bad request
-               content:
-                  application/json:
-                     schema:
-                        type: object
-                        properties:
-                           message:
-                              type: string
-                              example: Bad request
+                              example: Category already exists
             '422':
                description: invalid request body
                content:

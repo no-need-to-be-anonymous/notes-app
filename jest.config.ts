@@ -55,6 +55,7 @@ export default {
    //   "enableGlobally": false
    // },
 
+   testTimeout: 9000,
    // Force coverage collection from ignored files using an array of glob patterns
    // forceCoverageMatch: [],
 
@@ -153,10 +154,7 @@ export default {
    // testLocationInResults: false,
 
    // The glob patterns Jest uses to detect test files
-   // testMatch: [
-   //   "**/__tests__/**/*.[jt]s?(x)",
-   //   "**/?(*.)+(spec|test).[tj]s?(x)"
-   // ],
+   testMatch: ['**/?(*.)+(test).[tj]s?(x)'],
 
    // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
    // testPathIgnorePatterns: [

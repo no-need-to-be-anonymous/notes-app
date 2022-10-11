@@ -36,6 +36,24 @@ Rebuild docker
 yarn run docker:up-rebuild
 ```
 
+Tests
+
+Unit/Integration tests
+
+```bash 
+    yarn run test
+```
+
+E2E test
+
+In order to run E2E tests please create separate DB for tests and put `DATABASE_URL` in `.env.test` 
+Run E2E tests with
+
+```bash
+    yarn run test:e2e
+```
+
+
 ## API Documentation
 
 We use swagger to document our API.
