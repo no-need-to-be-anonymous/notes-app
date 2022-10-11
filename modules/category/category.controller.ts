@@ -7,12 +7,17 @@ import {
    controller,
    httpGet,
    httpPost,
+   httpPut,
    interfaces,
 } from 'inversify-express-utils'
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
-import { CreateCategory, CreateCategoryResponse } from './category.types'
-import { checkCategoryBody, checkCategoryUserIdQuery } from './category.validator'
+import { CreateCategory, CreateCategoryResponse, UpdateCategoryInput } from './category.types'
+import {
+   checkCategoryBody,
+   checkCategoryUserIdQuery,
+   updateCategoryValidator,
+} from './category.validator'
 import { HttpException } from '../../helpers/httpException.helper'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 
@@ -59,5 +64,29 @@ export class CategoryController extends BaseHttpController implements interfaces
       const categories = await this.categoryService.readAll(Number(userId))
 
       res.status(HttpStatus.OK).json(categories)
+   }
+
+   @httpPut('/category/:id', ...updateCategoryValidator)
+   async update(
+      req: Request<{ id: number }, unknown, Omit<UpdateCategoryInput, 'id'>>,
+      res: Response
+   ) {
+      const categoryId = req.params.id
+      const input: Omit<UpdateCategoryInput, 'id'> = {
+         name: req.body.name,
+      }
+      // TODO move all this logic to middleware
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+         const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
+         return res.json({
+            message,
+         })
+      }
+
+      const response = await this.categoryService.update({ id: Number(categoryId), ...input })
+
+      res.status(HttpStatus.OK).json(response)
    }
 }

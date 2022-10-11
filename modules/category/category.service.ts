@@ -3,12 +3,13 @@ import { HttpStatus } from '../../helpers/httpStatus'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../inversify/types'
 import { ICategoryRepository } from './category.repository'
-import { Categories, CategoryModel, CreateCategory, CreateCategoryResponse } from './category.types'
+import { Categories, CategoryModel, CreateCategory, CreateCategoryResponse, UpdateCategoryInput, UpdateCategoryResponse } from './category.types'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 
 export interface ICategoryService {
    create(category: CreateCategory): Promise<CreateCategoryResponse>
    readAll(user_id: CategoryModel['user_id']): Promise<Categories>
+   update(updateInput: UpdateCategoryInput):Promise<UpdateCategoryResponse>
 }
 
 @injectable()
@@ -27,5 +28,9 @@ export class CategoryService implements ICategoryService {
 
    async readAll(user_id: CategoryModel['user_id']): Promise<Categories> {
       return await this.categoryRepo.readAll(user_id)
+   }
+
+   async update(updateInput: UpdateCategoryInput): Promise<UpdateCategoryResponse> {
+      return await this.categoryRepo.update(updateInput)
    }
 }

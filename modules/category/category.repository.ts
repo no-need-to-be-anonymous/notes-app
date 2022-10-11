@@ -1,12 +1,20 @@
 import { PrismaClient } from '.prisma/client'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../inversify/types'
-import { CategoryModel, CreateCategory, CreateCategoryResponse, Categories } from './category.types'
+import {
+   CategoryModel,
+   CreateCategory,
+   CreateCategoryResponse,
+   Categories,
+   UpdateCategoryInput,
+   UpdateCategoryResponse,
+} from './category.types'
 
 export interface ICategoryRepository {
    create(data: CreateCategory): Promise<CreateCategoryResponse>
    readAll(user_id: CategoryModel['user_id']): Promise<Categories>
    getOne(name: string, user_id: number): Promise<boolean>
+   update(updateInput: UpdateCategoryInput): Promise<Pick<CategoryModel, 'id'>>
 }
 
 @injectable()
@@ -48,5 +56,19 @@ export class CategoryRepo implements ICategoryRepository {
       })
 
       return category ? true : false
+   }
+
+   async update({ id, name }: UpdateCategoryInput): Promise<UpdateCategoryResponse> {
+      return await this.prisma.category.update({
+         data: {
+            name,
+         },
+         where: {
+            id,
+         },
+         select: {
+            id: true,
+         },
+      })
    }
 }
