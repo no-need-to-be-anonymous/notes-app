@@ -7,12 +7,22 @@ import prisma from '../../../db/connection'
 import { errorConfig } from '../../../helpers/errorConfig'
 import { HttpStatus } from '../../../helpers/httpStatus'
 import { EXCEPTION_MESSAGE } from '../../../helpers/exceptionMessages'
-import { createDefaultUser } from '../../../utils/test.utils'
+import { createCategories, createDefaultUsers, User } from '../../../utils/test.utils'
+import { CategoryModel } from '../category.types'
 
 describe('/category', () => {
    let app: request.SuperTest<request.Test>
 
    beforeAll(async () => {
+      const defaultUsers: User[] = [
+         {
+            email: 'test@gmail.com',
+         },
+         {
+            email: 'test2@gmail.com',
+         },
+      ]
+
       const server = new InversifyExpressServer(DIContainer)
       server.setConfig((app) => {
          app.use(bodyParser.json())
@@ -20,7 +30,7 @@ describe('/category', () => {
       server.setErrorConfig(errorConfig)
       app = request(server.build())
 
-      await createDefaultUser()
+      await createDefaultUsers(defaultUsers)
    })
 
    describe('POST - create category', () => {
@@ -70,6 +80,66 @@ describe('/category', () => {
 
       afterEach(async () => {
          await prisma.$queryRaw`TRUNCATE category RESTART IDENTITY CASCADE;`
+      })
+   })
+
+   describe('GET - categories for user', () => {
+      const defaultDate = '2022-10-11T11:17:33.397Z'
+      const categories: Pick<CategoryModel, 'name' | 'user_id' | 'created_at'>[] = [
+         {
+            name: 'Education',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Art',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Work',
+            user_id: 2,
+            created_at: new Date(defaultDate),
+         },
+      ]
+      beforeAll(async () => {
+         await createCategories(categories)
+      })
+
+      it('should throw a validation error if user_id query parameter is missing', async () => {
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.MISSING_USER_ID }
+         const response = await app.get('/categories')
+
+         expect(response.body).toEqual(errorMessage)
+      })
+
+      it('should return categories for user', async () => {
+         const user_id = 1
+
+         
+         const response = await app.get(`/categories?user_id=${user_id}`)
+         const userCategories = categories
+            .filter((category) => category.user_id === user_id)
+            .map(({ name }, index) => {
+               const id = index + 1
+               return {
+                  id,
+                  name,
+                  created_at: defaultDate,
+               }
+            })
+
+         expect(response.statusCode).toBe(HttpStatus.OK)
+         expect(response.body).toEqual(userCategories)
+      })
+
+      it('should return empty array if user does not exists', async () => {
+         const user_id = 3
+
+         const response = await app.get(`/categories?user_id=${user_id}`)
+
+         expect(response.statusCode).toBe(HttpStatus.OK)
+         expect(response.body).toEqual([])
       })
    })
 

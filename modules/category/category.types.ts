@@ -6,5 +6,10 @@ export interface CategoryModel {
    user_id: number
 }
 
+export type Categories = Omit<CategoryModel, 'user_id' | 'updated_at'>[]
+
 export type CreateCategory = Pick<CategoryModel, 'name' | 'user_id'>
-export type CreateCategoryResponse = Pick<CategoryModel,'id'>
+export type CreateCategoryResponse = Pick<CategoryModel, 'id'>
+
+export type UpdateCategoryInput = Pick<CategoryModel, 'id' | 'name'>
+export type UpdateCategoryResponse = Pick<CategoryModel, 'id'>
