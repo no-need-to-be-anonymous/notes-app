@@ -25,10 +25,7 @@ model category {
   user users @relation(fields: [user_id], references: [id],onDelete: Cascade) 
   user_id Int
   subcategories subcategory[]
-  notes note[]
-
-  @@unique([user_id, name])
-  
+  notes note[]  
 }
 
 model subcategory {
