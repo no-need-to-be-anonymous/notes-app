@@ -116,7 +116,6 @@ describe('/category', () => {
       it('should return categories for user', async () => {
          const user_id = 1
 
-         
          const response = await app.get(`/categories?user_id=${user_id}`)
          const userCategories = categories
             .filter((category) => category.user_id === user_id)
@@ -140,6 +139,58 @@ describe('/category', () => {
 
          expect(response.statusCode).toBe(HttpStatus.OK)
          expect(response.body).toEqual([])
+      })
+   })
+
+   describe('PUT - /category/:id - update category', () => {
+      const defaultDate = '2022-10-11T11:17:33.397Z'
+      const categories: Pick<CategoryModel, 'name' | 'user_id' | 'created_at'>[] = [
+         {
+            name: 'Education',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Art',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Work',
+            user_id: 2,
+            created_at: new Date(defaultDate),
+         },
+      ]
+      beforeAll(async () => {
+         await createCategories(categories)
+      })
+
+      it('should update category name', async () => {
+         const category_id = 1
+         const updatedName = 'Psychology'
+
+         const response = await app.put(`/category/${category_id}`).send({
+            name: updatedName,
+         })
+
+         expect(response.statusCode).toBe(HttpStatus.OK)
+         expect(response.body).toEqual({
+            id: 1,
+            name: updatedName,
+         })
+      })
+
+      it('should throw an error for not existing category id', async () => {
+         const category_id = categories.length + 1
+         const updatedName = 'Psychology'
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.NOT_EXISTS }
+
+         const response = await app.put(`/category/${category_id}`).send({
+            name: updatedName,
+         })
+
+         expect(response.statusCode).toBe(HttpStatus.NOT_FOUND)
+         expect(response.body).toEqual(errorMessage)
       })
    })
 

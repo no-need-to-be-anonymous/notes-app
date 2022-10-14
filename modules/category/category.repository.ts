@@ -13,8 +13,9 @@ import {
 export interface ICategoryRepository {
    create(data: CreateCategory): Promise<CreateCategoryResponse>
    readAll(user_id: CategoryModel['user_id']): Promise<Categories>
-   getOne(name: string, user_id: number): Promise<boolean>
-   update(updateInput: UpdateCategoryInput): Promise<Pick<CategoryModel, 'id'>>
+   getOneByUserId(name: string, user_id: number): Promise<boolean>
+   getOneById(id: number): Promise<boolean>
+   update(updateInput: UpdateCategoryInput): Promise<Pick<CategoryModel, 'id' | 'name'>>
 }
 
 @injectable()
@@ -47,11 +48,21 @@ export class CategoryRepo implements ICategoryRepository {
          },
       })
    }
-   async getOne(name: string, user_id: number): Promise<boolean> {
+   async getOneByUserId(name: string, user_id: number): Promise<boolean> {
       const category = await this.prisma.category.findFirst({
          where: {
             user_id,
             name,
+         },
+      })
+
+      return category ? true : false
+   }
+
+   async getOneById(id: number): Promise<boolean> {
+      const category = await this.prisma.category.findFirst({
+         where: {
+            id,
          },
       })
 
@@ -68,6 +79,7 @@ export class CategoryRepo implements ICategoryRepository {
          },
          select: {
             id: true,
+            name: true,
          },
       })
    }
