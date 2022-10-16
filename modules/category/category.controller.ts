@@ -68,7 +68,7 @@ export class CategoryController extends BaseHttpController implements interfaces
       res.status(HttpStatus.OK).json(categories)
    }
 
-   @httpPut('/category/:id', ...updateCategoryValidator)
+   @httpPut('/category/:id', validate(updateCategoryValidator))
    async update(
       req: Request<{ id: number }, unknown, Omit<UpdateCategoryInput, 'id'>>,
       res: Response
@@ -76,15 +76,6 @@ export class CategoryController extends BaseHttpController implements interfaces
       const categoryId = req.params.id
       const input: Omit<UpdateCategoryInput, 'id'> = {
          name: req.body.name,
-      }
-      // TODO move all this logic to middleware
-      const errors = validationResult(req)
-
-      if (!errors.isEmpty()) {
-         const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
-         return res.json({
-            message,
-         })
       }
 
       const response = await this.categoryService.update({ id: Number(categoryId), ...input })

@@ -197,6 +197,26 @@ describe('/category', () => {
          expect(response.statusCode).toBe(HttpStatus.NOT_FOUND)
          expect(response.body).toEqual(errorMessage)
       })
+
+      it('should throw an error if name field is missing in request body', async () => {
+         const category_id = 1
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY }
+
+         const response = await app.put(`/category/${category_id}`).send({})
+
+         expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY)
+         expect(response.body).toEqual(errorMessage)
+      })
+
+      it('should throw an error if name field value is not of correct type', async () => {
+         const category_id = 1
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY_FIELD_TYPE }
+
+         const response = await app.put(`/category/${category_id}`).send({ name: 1 })
+
+         expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY)
+         expect(response.body).toEqual(errorMessage)
+      })
    })
 
    describe('DELETE - /category/:id', () => {
