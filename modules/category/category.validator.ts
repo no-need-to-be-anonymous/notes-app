@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
-import { body, param, query, ValidationChain, validationResult } from 'express-validator'
+import { body, param, ValidationChain, validationResult } from 'express-validator'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
+import { HttpStatus } from '../../helpers/httpStatus'
 
 export const checkCategoryBody = [
    body('name').isString().notEmpty().withMessage('Category name should be provided'),
    body('user_id').isInt().notEmpty().withMessage('User id should be provided'),
 ]
 
-export const checkCategoryUserIdQuery = [
-   query('user_id').notEmpty().withMessage(EXCEPTION_MESSAGE.CATEGORY.MISSING_USER_ID),
+export const checkCategoryUserIdParam = [
+   param('user_id').isNumeric().withMessage(EXCEPTION_MESSAGE.CATEGORY.INVALID_PARAM_TYPE),
 ]
 
 export const updateCategoryValidator = [
@@ -30,7 +31,7 @@ export const validate = (validations: ValidationChain[]) => {
       }
 
       const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
-      return res.status(422).json({
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
          message,
       })
    }

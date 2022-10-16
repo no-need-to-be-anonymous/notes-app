@@ -14,14 +14,16 @@ import {
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
 import {
+   Categories,
    CreateCategory,
    CreateCategoryResponse,
    DeleteCategoryResponse,
+   ErrorMessage,
    UpdateCategoryInput,
 } from './category.types'
 import {
    checkCategoryBody,
-   checkCategoryUserIdQuery,
+   checkCategoryUserIdParam,
    deleteCategoryValidator,
    updateCategoryValidator,
    validate,
@@ -57,17 +59,9 @@ export class CategoryController extends BaseHttpController implements interfaces
       return res.status(HttpStatus.CREATED).json(newCategory)
    }
 
-   @httpGet('/categories', ...checkCategoryUserIdQuery)
-   async read(req: Request<unknown, unknown, unknown, { user_id: string }>, res: Response) {
-      const userId = req.query.user_id
-      const errors = validationResult(req)
-
-      if (!errors.isEmpty()) {
-         const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
-         return res.json({
-            message,
-         })
-      }
+   @httpGet('/categories/:user_id', validate(checkCategoryUserIdParam))
+   async read(req: Request<{ user_id: string }>, res: Response<Categories | ErrorMessage>) {
+      const userId = req.params.user_id
 
       const categories = await this.categoryService.readAll(Number(userId))
 
@@ -103,7 +97,7 @@ export class CategoryController extends BaseHttpController implements interfaces
       const category_id = req.params.id
 
       const response = await this.categoryService.delete(Number(category_id))
-      console.log('response', response)
+
       res.status(HttpStatus.OK).json(response)
    }
 }
