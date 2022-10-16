@@ -74,3 +74,49 @@ paths:
                            message:
                               type: string
                               example: Someting went wrong
+   /category/{id}:
+      title: category
+      delete:
+         summary: Delete category
+         tags:
+            - Category
+         parameters:
+            - in: path
+              name: id
+              schema:
+                 type: integer
+              required: true
+              description: Numeric id of category
+         responses:
+            '200':
+               description: successfully deleted category
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           id:
+                              type: integer
+                              description: ID of deleted category
+                              example: 1
+            '404':
+               description: Category ID is not found, cannot delete
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              example: Category does not exist
+
+            '422':
+               description: validation error
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              example: Parameter type is invalid
