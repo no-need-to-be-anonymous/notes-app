@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { body, param, query, ValidationChain, validationResult } from 'express-validator'
+import { body, param, ValidationChain, validationResult } from 'express-validator'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 
 export const checkCategoryBody = [
@@ -7,8 +7,8 @@ export const checkCategoryBody = [
    body('user_id').isInt().notEmpty().withMessage('User id should be provided'),
 ]
 
-export const checkCategoryUserIdQuery = [
-   query('user_id').notEmpty().withMessage(EXCEPTION_MESSAGE.CATEGORY.MISSING_USER_ID),
+export const checkCategoryUserIdParam = [
+   param('user_id').isNumeric().withMessage(EXCEPTION_MESSAGE.CATEGORY.INVALID_PARAM_TYPE),
 ]
 
 export const updateCategoryValidator = [

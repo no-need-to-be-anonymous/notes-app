@@ -21,7 +21,7 @@ import {
 } from './category.types'
 import {
    checkCategoryBody,
-   checkCategoryUserIdQuery,
+   checkCategoryUserIdParam,
    deleteCategoryValidator,
    updateCategoryValidator,
    validate,
@@ -57,9 +57,9 @@ export class CategoryController extends BaseHttpController implements interfaces
       return res.status(HttpStatus.CREATED).json(newCategory)
    }
 
-   @httpGet('/categories', ...checkCategoryUserIdQuery)
-   async read(req: Request<unknown, unknown, unknown, { user_id: string }>, res: Response) {
-      const userId = req.query.user_id
+   @httpGet('/categories/:user_id', ...checkCategoryUserIdParam)
+   async read(req: Request<{ user_id: string }>, res: Response) {
+      const userId = req.params.user_id
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -103,7 +103,7 @@ export class CategoryController extends BaseHttpController implements interfaces
       const category_id = req.params.id
 
       const response = await this.categoryService.delete(Number(category_id))
-      console.log('response', response)
+
       res.status(HttpStatus.OK).json(response)
    }
 }

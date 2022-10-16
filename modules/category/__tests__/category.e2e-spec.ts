@@ -106,9 +106,9 @@ describe('/category', () => {
          await createCategories(categories)
       })
 
-      it('should throw a validation error if user_id query parameter is missing', async () => {
-         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.MISSING_USER_ID }
-         const response = await app.get('/categories')
+      it('should throw a validation error if user_id param is not a number', async () => {
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.INVALID_PARAM_TYPE }
+         const response = await app.get('/categories/some')
 
          expect(response.body).toEqual(errorMessage)
       })
@@ -116,7 +116,7 @@ describe('/category', () => {
       it('should return categories for user', async () => {
          const user_id = 1
 
-         const response = await app.get(`/categories?user_id=${user_id}`)
+         const response = await app.get(`/categories/${user_id}`)
          const userCategories = categories
             .filter((category) => category.user_id === user_id)
             .map(({ name }, index) => {
@@ -135,7 +135,7 @@ describe('/category', () => {
       it('should return empty array if user does not exists', async () => {
          const user_id = 3
 
-         const response = await app.get(`/categories?user_id=${user_id}`)
+         const response = await app.get(`/categories/${user_id}`)
 
          expect(response.statusCode).toBe(HttpStatus.OK)
          expect(response.body).toEqual([])
@@ -243,13 +243,13 @@ describe('/category', () => {
          const user_id = 1
 
          const response = await app.delete(`/category/${category_id}`)
-         const categories = await app.get(`/categories`).query({ user_id })
+         const categories = await app.get(`/categories/${user_id}`)
 
          const deletedCategoryExists = categories.body.find(
             (category) => category.id === category_id
          )
 
-         expect(response.body).toEqual({id: category_id})
+         expect(response.body).toEqual({ id: category_id })
          expect(response.statusCode).toEqual(HttpStatus.OK)
          expect(deletedCategoryExists).toBe(undefined)
       })
