@@ -16,3 +16,7 @@ export type UpdateCategoryResponse = Pick<CategoryModel, 'id' | 'name'>
 
 export type DeleteCategoryInput = Pick<CategoryModel, 'id'>
 export type DeleteCategoryResponse = Pick<CategoryModel, 'id'>
+
+export interface ErrorMessage {
+   message: string
+}

@@ -14,9 +14,11 @@ import {
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
 import {
+   Categories,
    CreateCategory,
    CreateCategoryResponse,
    DeleteCategoryResponse,
+   ErrorMessage,
    UpdateCategoryInput,
 } from './category.types'
 import {
@@ -57,17 +59,9 @@ export class CategoryController extends BaseHttpController implements interfaces
       return res.status(HttpStatus.CREATED).json(newCategory)
    }
 
-   @httpGet('/categories/:user_id', ...checkCategoryUserIdParam)
-   async read(req: Request<{ user_id: string }>, res: Response) {
+   @httpGet('/categories/:user_id', validate(checkCategoryUserIdParam))
+   async read(req: Request<{ user_id: string }>, res: Response<Categories | ErrorMessage>) {
       const userId = req.params.user_id
-      const errors = validationResult(req)
-
-      if (!errors.isEmpty()) {
-         const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
-         return res.json({
-            message,
-         })
-      }
 
       const categories = await this.categoryService.readAll(Number(userId))
 
