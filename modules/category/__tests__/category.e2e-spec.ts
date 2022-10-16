@@ -165,6 +165,10 @@ describe('/category', () => {
          await createCategories(categories)
       })
 
+      afterEach(async () => {
+         await prisma.$queryRaw`TRUNCATE category RESTART IDENTITY CASCADE;`
+      })
+
       it('should update category name', async () => {
          const category_id = 1
          const updatedName = 'Psychology'
@@ -191,6 +195,63 @@ describe('/category', () => {
 
          expect(response.statusCode).toBe(HttpStatus.NOT_FOUND)
          expect(response.body).toEqual(errorMessage)
+      })
+   })
+
+   describe('DELETE - /category/:id', () => {
+      const defaultDate = '2022-10-11T11:17:33.397Z'
+      const categories: Pick<CategoryModel, 'name' | 'user_id' | 'created_at'>[] = [
+         {
+            name: 'Education',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Art',
+            user_id: 1,
+            created_at: new Date(defaultDate),
+         },
+         {
+            name: 'Work',
+            user_id: 2,
+            created_at: new Date(defaultDate),
+         },
+      ]
+      beforeAll(async () => {
+         await createCategories(categories)
+      })
+
+      it('should throw an error if category id is not a number', async () => {
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.INVALID_PARAM_TYPE }
+
+         const response = await app.delete(`/category/some`)
+
+         expect(response.body).toEqual(errorMessage)
+      })
+
+      it('should throw an error if category id does not exist', async () => {
+         const category_id = categories.length + 1
+         const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.NOT_EXISTS }
+
+         const response = await app.delete(`/category/${category_id}`)
+
+         expect(response.body).toEqual(errorMessage)
+      })
+
+      it('should delete category', async () => {
+         const category_id = 1
+         const user_id = 1
+
+         const response = await app.delete(`/category/${category_id}`)
+         const categories = await app.get(`/categories`).query({ user_id })
+
+         const deletedCategoryExists = categories.body.find(
+            (category) => category.id === category_id
+         )
+
+         expect(response.body).toEqual({id: category_id})
+         expect(response.statusCode).toEqual(HttpStatus.OK)
+         expect(deletedCategoryExists).toBe(undefined)
       })
    })
 

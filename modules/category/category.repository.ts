@@ -1,4 +1,4 @@
-import { PrismaClient } from '.prisma/client'
+import { Prisma, PrismaClient } from '.prisma/client'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../inversify/types'
 import {
@@ -8,6 +8,7 @@ import {
    Categories,
    UpdateCategoryInput,
    UpdateCategoryResponse,
+   DeleteCategoryResponse,
 } from './category.types'
 
 export interface ICategoryRepository {
@@ -15,7 +16,9 @@ export interface ICategoryRepository {
    readAll(user_id: CategoryModel['user_id']): Promise<Categories>
    getOneByUserId(name: string, user_id: number): Promise<boolean>
    getOneById(id: number): Promise<boolean>
+   getOneByCategoryId(id: number): Promise<CategoryModel>
    update(updateInput: UpdateCategoryInput): Promise<Pick<CategoryModel, 'id' | 'name'>>
+   delete(category_id: CategoryModel['id']): Promise<DeleteCategoryResponse>
 }
 
 @injectable()
@@ -69,6 +72,22 @@ export class CategoryRepo implements ICategoryRepository {
       return category ? true : false
    }
 
+   async getOneByCategoryId(id: number): Promise<CategoryModel> {
+      const category = await this.prisma.category.findFirst({
+         where: {
+            id,
+         },
+         select: {
+            id: true,
+            name: true,
+            created_at: true,
+            updated_at: true,
+            user_id: true,
+         },
+      })
+      return category
+   }
+
    async update({ id, name }: UpdateCategoryInput): Promise<UpdateCategoryResponse> {
       return await this.prisma.category.update({
          data: {
@@ -80,6 +99,17 @@ export class CategoryRepo implements ICategoryRepository {
          select: {
             id: true,
             name: true,
+         },
+      })
+   }
+
+   async delete(category_id: number): Promise<DeleteCategoryResponse> {
+      return await this.prisma.category.delete({
+         where: {
+            id: category_id,
+         },
+         select: {
+            id: true,
          },
       })
    }

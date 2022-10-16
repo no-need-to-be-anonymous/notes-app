@@ -5,6 +5,7 @@ import { inject } from 'inversify'
 import {
    BaseHttpController,
    controller,
+   httpDelete,
    httpGet,
    httpPost,
    httpPut,
@@ -12,11 +13,18 @@ import {
 } from 'inversify-express-utils'
 import { TYPES } from '../../inversify/types'
 import { ICategoryService } from './category.service'
-import { CreateCategory, CreateCategoryResponse, UpdateCategoryInput } from './category.types'
+import {
+   CreateCategory,
+   CreateCategoryResponse,
+   DeleteCategoryResponse,
+   UpdateCategoryInput,
+} from './category.types'
 import {
    checkCategoryBody,
    checkCategoryUserIdQuery,
+   deleteCategoryValidator,
    updateCategoryValidator,
+   validate,
 } from './category.validator'
 import { HttpException } from '../../helpers/httpException.helper'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
@@ -87,6 +95,15 @@ export class CategoryController extends BaseHttpController implements interfaces
 
       const response = await this.categoryService.update({ id: Number(categoryId), ...input })
 
+      res.status(HttpStatus.OK).json(response)
+   }
+
+   @httpDelete('/category/:id', validate(deleteCategoryValidator))
+   async delete(req: Request<{ id: number }, unknown>, res: Response<DeleteCategoryResponse>) {
+      const category_id = req.params.id
+
+      const response = await this.categoryService.delete(Number(category_id))
+      console.log('response', response)
       res.status(HttpStatus.OK).json(response)
    }
 }

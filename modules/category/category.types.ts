@@ -13,3 +13,6 @@ export type CreateCategoryResponse = Pick<CategoryModel, 'id'>
 
 export type UpdateCategoryInput = Pick<CategoryModel, 'id' | 'name'>
 export type UpdateCategoryResponse = Pick<CategoryModel, 'id' | 'name'>
+
+export type DeleteCategoryInput = Pick<CategoryModel, 'id'>
+export type DeleteCategoryResponse = Pick<CategoryModel, 'id'>
