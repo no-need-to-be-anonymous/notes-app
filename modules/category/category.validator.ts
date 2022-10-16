@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { body, param, ValidationChain, validationResult } from 'express-validator'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
+import { HttpStatus } from '../../helpers/httpStatus'
 
 export const checkCategoryBody = [
    body('name').isString().notEmpty().withMessage('Category name should be provided'),
@@ -30,7 +31,7 @@ export const validate = (validations: ValidationChain[]) => {
       }
 
       const message = errors.formatWith((error) => error.msg).array({ onlyFirstError: true })[0]
-      return res.status(422).json({
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
          message,
       })
    }

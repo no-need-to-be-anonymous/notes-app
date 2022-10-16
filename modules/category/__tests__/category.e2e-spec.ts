@@ -110,6 +110,7 @@ describe('/category', () => {
          const errorMessage = { message: EXCEPTION_MESSAGE.CATEGORY.INVALID_PARAM_TYPE }
          const response = await app.get('/categories/some')
 
+         expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY)
          expect(response.body).toEqual(errorMessage)
       })
 
