@@ -8,6 +8,7 @@ import {
    CategoryModel,
    CreateCategory,
    CreateCategoryResponse,
+   DeleteCategoryResponse,
    UpdateCategoryInput,
    UpdateCategoryResponse,
 } from './category.types'
@@ -17,7 +18,7 @@ export interface ICategoryService {
    create(category: CreateCategory): Promise<CreateCategoryResponse>
    readAll(user_id: CategoryModel['user_id']): Promise<Categories>
    update(updateInput: UpdateCategoryInput): Promise<UpdateCategoryResponse>
-   delete(category_id: CategoryModel['id']): Promise<unknown>
+   delete(category_id: CategoryModel['id']): Promise<DeleteCategoryResponse>
 }
 
 @injectable()
@@ -46,7 +47,7 @@ export class CategoryService implements ICategoryService {
       return await this.categoryRepo.update(updateInput)
    }
 
-   async delete(category_id: number): Promise<unknown> {
+   async delete(category_id: number): Promise<DeleteCategoryResponse> {
       const categoryExists = await this.categoryRepo.getOneByCategoryId(category_id)
 
       if (!categoryExists) {

@@ -1,4 +1,4 @@
-import { PrismaClient } from '.prisma/client'
+import { Prisma, PrismaClient } from '.prisma/client'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../inversify/types'
 import {
@@ -8,6 +8,7 @@ import {
    Categories,
    UpdateCategoryInput,
    UpdateCategoryResponse,
+   DeleteCategoryResponse,
 } from './category.types'
 
 export interface ICategoryRepository {
@@ -17,7 +18,7 @@ export interface ICategoryRepository {
    getOneById(id: number): Promise<boolean>
    getOneByCategoryId(id: number): Promise<CategoryModel>
    update(updateInput: UpdateCategoryInput): Promise<Pick<CategoryModel, 'id' | 'name'>>
-   delete(category_id: CategoryModel['id']): Promise<Record<string, unknown>>
+   delete(category_id: CategoryModel['id']): Promise<DeleteCategoryResponse>
 }
 
 @injectable()
@@ -102,12 +103,14 @@ export class CategoryRepo implements ICategoryRepository {
       })
    }
 
-   async delete(category_id: number): Promise<Record<string, unknown>> {
-      await this.prisma.category.delete({
+   async delete(category_id: number): Promise<DeleteCategoryResponse> {
+      return await this.prisma.category.delete({
          where: {
             id: category_id,
          },
+         select: {
+            id: true,
+         },
       })
-      return {}
    }
 }

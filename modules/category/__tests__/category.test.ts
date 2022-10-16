@@ -37,7 +37,7 @@ describe('CategoryService', () => {
 
    it('should throw an error if category already exists', async () => {
       const user_id = 23
-      mockedRepo.getOne.mockResolvedValue(true)
+      mockedRepo.getOneByUserId.mockResolvedValue(true)
 
       expect(
          categoryService.create({

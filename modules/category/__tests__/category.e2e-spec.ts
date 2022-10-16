@@ -249,8 +249,8 @@ describe('/category', () => {
             (category) => category.id === category_id
          )
 
-         expect(response.body).toEqual({})
-         expect(response.statusCode).toEqual(HttpStatus.NO_CONTENT)
+         expect(response.body).toEqual({id: category_id})
+         expect(response.statusCode).toEqual(HttpStatus.OK)
          expect(deletedCategoryExists).toBe(undefined)
       })
    })
