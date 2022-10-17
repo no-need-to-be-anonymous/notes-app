@@ -28,7 +28,7 @@ paths:
                   application/json:
                      schema:
                         type: array
-                        items: 
+                        items:
                            $ref: '#components/schemas/Category'
             '422':
                description: Validation error
@@ -37,7 +37,7 @@ paths:
                      schema:
                         type: object
                         properties:
-                           message: 
+                           message:
                               type: string
                               example: Parameter type is invalid
    /category:
@@ -107,8 +107,60 @@ paths:
                               example: Someting went wrong
    /category/{id}:
       title: category
+      put:
+         summary: Update category
+         tags:
+            - Category
+         requestBody:
+            description: Category fields to be updated
+            content:
+               application/json:
+                  schema:
+                     type: object
+                     properties:
+                        name:
+                           type: string
+                           example: 'Education'
+                        required:
+                           - name
+         responses:
+            '200':
+               description: Updated category
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           id:
+                              type: integer
+                              description: ID of updated category
+                              example: 1
+                           name:
+                              type: string
+                              description: Updated name of category
+                              example: Art
+            '404':
+               description: Category does not exist
+               content:
+                  application/json:
+                     schema:
+                        type: object
+                        properties:
+                           message:
+                              type: string
+                              description: Category with ID doesn't exist
+                              example: Category does not exist
+            '422':
+               description: Invalid request body
+               content:
+                  application/json:
+                     schema:
+                        oneOf:
+                           - $ref: '#components/schemas/InvalidRequestBodyError'
+                           - $ref: '#components/schemas/InvalidRequestBodyFieldType'
+
       delete:
-         summary: Delete category
+         summary: Delete category by "id"
          tags:
             - Category
          parameters:
@@ -166,3 +218,15 @@ components:
             created_at:
                type: string
                example: '2022-10-11T11:17:33.397Z'
+      InvalidRequestBodyError:
+         type: object
+         properties:
+            message:
+               type: string
+               example: Invalid request body
+      InvalidRequestBodyFieldType:
+         type: object
+         properties:
+            message:
+               type: string
+               example: One of fields has incorrect type
