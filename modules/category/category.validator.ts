@@ -4,7 +4,7 @@ import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
 import { HttpStatus } from '../../helpers/httpStatus'
 
 export const checkCategoryBody = [
-   body('name').isString().notEmpty().withMessage('Category name should be provided'),
+   body('name').isString().withMessage('Category name should be provided'),
    body('user_id').isInt().notEmpty().withMessage('User id should be provided'),
 ]
 
@@ -13,8 +13,12 @@ export const checkCategoryUserIdParam = [
 ]
 
 export const updateCategoryValidator = [
-   param('id').notEmpty().withMessage(EXCEPTION_MESSAGE.CATEGORY.MISSING_ID_PARAM),
-   body('name').isString().notEmpty().withMessage(EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY),
+   param('id').isNumeric().withMessage(EXCEPTION_MESSAGE.CATEGORY.MISSING_ID_PARAM),
+   body('name')
+      .notEmpty()
+      .withMessage(EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY)
+      .isString()
+      .withMessage(EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY_FIELD_TYPE),
 ]
 
 export const deleteCategoryValidator = [

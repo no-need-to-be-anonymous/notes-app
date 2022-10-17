@@ -6,6 +6,7 @@ export const EXCEPTION_MESSAGE = {
       MISSING_ID_PARAM: 'Missing id param',
       NOT_EXISTS: 'Category does not exist',
       INVALID_PARAM_TYPE: 'Parameter type is invalid',
+      INVALID_BODY_FIELD_TYPE: 'One of fields has incorrect type'
    },
    SERVER: {
       INTERNAL_SERVER_ERROR: 'Something went wrong',
