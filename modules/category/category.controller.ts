@@ -22,20 +22,29 @@ import {
    UpdateCategoryInput,
 } from './category.types'
 import {
-   checkCategoryBody,
-   checkCategoryUserIdParam,
+   postCategoryValidator,
+   getCategoriesValidator,
    deleteCategoryValidator,
    updateCategoryValidator,
-   validate,
 } from './category.validator'
 import { HttpException } from '../../helpers/httpException.helper'
 import { EXCEPTION_MESSAGE } from '../../helpers/exceptionMessages'
+import { validate } from '../../utils/validate'
 
 @controller('')
 export class CategoryController extends BaseHttpController implements interfaces.Controller {
    @inject(TYPES.ICategoryService) private readonly categoryService: ICategoryService
 
-   @httpPost('/category', ...checkCategoryBody)
+   @httpGet('/categories/:user_id', validate(getCategoriesValidator))
+   async read(req: Request<{ user_id: string }>, res: Response<Categories | ErrorMessage>) {
+      const userId = req.params.user_id
+
+      const categories = await this.categoryService.readAll(Number(userId))
+
+      res.status(HttpStatus.OK).json(categories)
+   }
+
+   @httpPost('/category', validate(postCategoryValidator))
    async create(
       req: Request<unknown, unknown, CreateCategory>,
       res: Response<CreateCategoryResponse>
@@ -57,15 +66,6 @@ export class CategoryController extends BaseHttpController implements interfaces
 
       const newCategory = await this.categoryService.create(data)
       return res.status(HttpStatus.CREATED).json(newCategory)
-   }
-
-   @httpGet('/categories/:user_id', validate(checkCategoryUserIdParam))
-   async read(req: Request<{ user_id: string }>, res: Response<Categories | ErrorMessage>) {
-      const userId = req.params.user_id
-
-      const categories = await this.categoryService.readAll(Number(userId))
-
-      res.status(HttpStatus.OK).json(categories)
    }
 
    @httpPut('/category/:id', validate(updateCategoryValidator))

@@ -50,8 +50,8 @@ describe('/category', () => {
          expect(response.body).toEqual({ id: 1 })
       })
 
-      it('should throw an Error if user_id is missing', async () => {
-         const createCategoryDTO = { user_id: 1 }
+      it('should throw an error if user_id is missing', async () => {
+         const createCategoryDTO = { name: 'Education' }
 
          const response = await app.post('/category').send(createCategoryDTO)
 
@@ -60,7 +60,7 @@ describe('/category', () => {
       })
 
       it('should throw an error with correct message if name is missing', async () => {
-         const createCategoryDTO = { name: 'Education' }
+         const createCategoryDTO = { user_id: 1 }
 
          const response = await app.post('/category').send(createCategoryDTO)
 
