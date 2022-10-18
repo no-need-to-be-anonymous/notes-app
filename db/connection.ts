@@ -5,7 +5,7 @@ import path from 'path'
 const isTest = process.env.NODE_ENV === 'test'
 
 dotenv.config({
-   path: path.resolve(__dirname, '../.env.test'),
+   path: path.resolve(__dirname, '../.env'),
    override: isTest,
 })
 

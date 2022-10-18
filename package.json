@@ -9,8 +9,8 @@
       "dev": "nodemon index.ts",
       "build": "tsc",
       "start": "node dist/index.js",
-      "prisma:migrate": "npx prisma migrate dev",
-      "prisma:migrate-test": "dotenv -e .env.test -- npx prisma migrate dev --name postgres-init",
+      "prisma:migrate": "npx prisma migrate deploy",
+      "prisma:migrate-test": "npx prisma migrate deploy",
       "prettier:format": "prettier --write .",
       "eslint:format": "eslint . --ext .ts,.js",
       "docker:up": "docker compose up",
@@ -19,7 +19,7 @@
       "docker:down": "docker compose down;",
       "test": "yarn run test:integration -- --watch=false && yarn run test:e2e -- --watch=false",
       "test:integration": "jest --config ./jest.config.ts --watch",
-      "test:e2e": "dotenv -e .env.test -- npm run prisma:migrate-test && jest --config ./jest-e2e.config.ts"
+      "test:e2e": "npm run prisma:migrate-test && jest --config ./jest-e2e.config.ts"
    },
    "devDependencies": {
       "@babel/core": "^7.19.3",
