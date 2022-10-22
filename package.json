@@ -15,7 +15,7 @@
       "eslint:format": "eslint . --ext .ts,.js",
       "docker:up": "docker compose up",
       "docker:up-rebuild": "docker compose down; docker compose up --renew-anon-volumes --build --force-recreate backend",
-      "docker:up-test": "docker compose -f docker-compose.test.yml --env-file ./.env.test up --renew-anon-volumes --build --force-recreate backend",
+      "docker:up-test": "docker compose -f docker-compose.test.yml up --renew-anon-volumes --build --force-recreate backend",
       "docker:down": "docker compose down;",
       "test": "yarn run test:integration -- --watch=false && yarn run test:e2e -- --watch=false",
       "test:integration": "jest --config ./jest.config.ts --watch",
