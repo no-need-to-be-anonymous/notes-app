@@ -9,23 +9,22 @@ services:
       depends_on:
          - postgres
       env_file:
-         - .env
-      command: bash -c "yarn run dev"
+         - .env.test
+      command: bash -c "yarn run prisma:migrate-test && yarn test:e2e && docker compose down"
       volumes:
          - .:/app
          - /app/node_modules
-      restart: always
    postgres:
       container_name: postgres
       image: postgres:13-alpine
       environment:
          POSTGRES_USER: postgres
          POSTGRES_PASSWORD: password4251
-         POSTGRES_DB: notes-app-local
+         POSTGRES_DB: notes-app-local-test
       ports:
          - '5433:5432'
       volumes:
-         - note_db:/var/lib/postgresql/data
+         - note_db_test:/var/lib/postgresql/data
 
 volumes:
-   note_db: {}
+   note_db_test: {}
