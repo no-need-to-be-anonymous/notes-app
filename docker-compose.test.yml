@@ -2,27 +2,25 @@ version: '3'
 
 services:
    backend:
-      build:
-         context: .
-         args:
-            - POSTGRES_HOST=host.docker.internal
-      container_name: backend-test
+      container_name: backend
+      build: .
       ports:
          - '8000:8000'
       depends_on:
          - postgres
-      command: ['yarn', 'run', 'test']
+      environment:
+         - DATABASE_URL=postgresql://postgres:password4251@host.docker.internal:5433/notes-app-local-test?connect_timeout=60&pool_timeout=30&socket_timeout=30
+      command: bash -c "yarn run prisma:migrate-test && yarn test:e2e && docker compose down"
       volumes:
          - .:/app
          - /app/node_modules
-   database:
+   postgres:
       container_name: postgres
       image: postgres:13-alpine
-      restart: always
       environment:
-         - POSTGRES_USER=postgres
-         - POSTGRES_PASSWORD=postgres
-         - POSTGRES_DB=notes-test
+         POSTGRES_USER: postgres
+         POSTGRES_PASSWORD: password4251
+         POSTGRES_DB: notes-app-local-test
       ports:
          - '5433:5432'
       volumes:

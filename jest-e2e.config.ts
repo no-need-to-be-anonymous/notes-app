@@ -4,4 +4,5 @@ export default {
    modulePaths: ['<rootDir>'],
    testEnvironment: 'node',
    testRegex: '\\.e2e-spec\\.ts$',
+   testTimeout: 10000,
 }
