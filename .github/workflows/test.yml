@@ -6,5 +6,3 @@ jobs:
       steps:
          - uses: actions/checkout@v3
          - run: yarn run docker:up-test
-         - if: ${{ failure() }}
-           run: exit code 1

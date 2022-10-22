@@ -9,7 +9,7 @@ services:
       depends_on:
          - postgres
       environment:
-         - DATABASE_URL=postgresql://postgres:password4251@host.docker.internal:5433/notes-app-local-test?connect_timeout=30&pool_timeout=30&socket_timeout=30
+         - DATABASE_URL=postgresql://postgres:password4251@host.docker.internal:5433/notes-app-local-test?connect_timeout=60&pool_timeout=30&socket_timeout=30
       command: bash -c "yarn run prisma:migrate-test && yarn test:e2e && docker compose down"
       volumes:
          - .:/app
