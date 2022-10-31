@@ -38,7 +38,6 @@ describe('/category', () => {
          const createCategoryDTO = { user_id: 1, name: 'Education' }
 
          const response = await app.post('/category').send(createCategoryDTO)
-
          expect(response.status).toBe(HttpStatus.CREATED)
       })
 
@@ -278,7 +277,6 @@ describe('/category', () => {
 
    afterAll(async () => {
       await prisma.$queryRaw`TRUNCATE TABLE users RESTART IDENTITY CASCADE;`
-      await prisma.$queryRaw`TRUNCATE TABLE category RESTART IDENTITY CASCADE;`
       await prisma.$disconnect()
    })
 })

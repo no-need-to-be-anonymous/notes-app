@@ -68,7 +68,7 @@ export class CategoryRepo implements ICategoryRepository {
             id,
          },
       })
-
+      console.log('category',category);
       return category ? true : false
    }
 
