@@ -18,7 +18,8 @@ export class SubcategoryRepository implements ISubcategoryRepository {
             category_id,
          },
          select: {
-            category_id: true,
+            id: true,
+            name: true
          },
       })
    }

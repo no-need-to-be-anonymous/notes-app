@@ -45,6 +45,7 @@ describe('/subcategory', () => {
       await createDefaultUsers(defaultUsers)
       await createCategories(defaultCategories)
    })
+
    afterEach(async () => {
       await prisma.$queryRaw`TRUNCATE subcategory RESTART IDENTITY CASCADE;`
    })
@@ -100,6 +101,21 @@ describe('/subcategory', () => {
 
       expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY)
       expect(response.body).toEqual(errorMessage)
+   })
+
+   it('should return id and name of newly created subcategory', async () => {
+      const createSubcategoryDTO = {
+         category_id: 2,
+         name: 'Math',
+      }
+
+      const response = await app.post('/subcategory').send(createSubcategoryDTO)
+
+      expect(response.statusCode).toBe(HttpStatus.OK)
+      expect(response.body).toEqual({
+         id: 1,
+         name: createSubcategoryDTO.name,
+      })
    })
 
    afterAll(async () => {
