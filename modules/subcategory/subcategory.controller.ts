@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { inject } from 'inversify'
 import { BaseHttpController, controller, httpPost, interfaces } from 'inversify-express-utils'
+import { HttpStatus } from '../../helpers/httpStatus'
 import { TYPES } from '../../inversify/types'
 import { validate } from '../../utils/validate'
 import { ISubcategoryService } from './subcategory.service'
@@ -16,6 +17,6 @@ export class SubcategoryController extends BaseHttpController implements interfa
 
       const response = await this.subcategoryService.create(subcategory)
 
-      res.json(response)
+      res.status(HttpStatus.CREATED).json(response)
    }
 }
