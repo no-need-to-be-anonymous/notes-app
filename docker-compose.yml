@@ -23,7 +23,7 @@ services:
          POSTGRES_PASSWORD: password4251
          POSTGRES_DB: notes-app-local
       ports:
-         - '5433:5432'
+         - '5434:5432'
       volumes:
          - note_db:/var/lib/postgresql/data
 

@@ -68,7 +68,6 @@ export class CategoryRepo implements ICategoryRepository {
             id,
          },
       })
-
       return category ? true : false
    }
 

@@ -19,7 +19,7 @@
       "docker:down": "docker compose down;",
       "test": "yarn run test:integration -- --watch=false && yarn run test:e2e -- --watch=false",
       "test:integration": "jest --config ./jest.config.ts --watch",
-      "test:e2e": "yarn run prisma:migrate-test && jest --config ./jest-e2e.config.ts"
+      "test:e2e": "yarn run prisma:migrate-test && jest --config ./jest-e2e.config.ts --detectOpenHandles"
    },
    "devDependencies": {
       "@babel/core": "^7.19.3",

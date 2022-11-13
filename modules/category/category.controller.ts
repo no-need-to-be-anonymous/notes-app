@@ -49,15 +49,6 @@ export class CategoryController extends BaseHttpController implements interfaces
       req: Request<unknown, unknown, CreateCategory>,
       res: Response<CreateCategoryResponse>
    ): Promise<Response<CreateCategoryResponse, Record<string, unknown>>> {
-      const errors = validationResult(req)
-
-      if (!errors.isEmpty()) {
-         throw new HttpException(
-            EXCEPTION_MESSAGE.CATEGORY.INVALID_BODY,
-            HttpStatus.UNPROCESSABLE_ENTITY
-         )
-      }
-
       const { name, user_id } = req.body
       const data: CreateCategory = {
          name,
