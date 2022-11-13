@@ -111,7 +111,7 @@ describe('/subcategory', () => {
 
       const response = await app.post('/subcategory').send(createSubcategoryDTO)
 
-      expect(response.statusCode).toBe(HttpStatus.OK)
+      expect(response.statusCode).toBe(HttpStatus.CREATED)
       expect(response.body).toEqual({
          id: 1,
          name: createSubcategoryDTO.name,
