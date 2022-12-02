@@ -12,7 +12,7 @@ jobs:
                POSTGRES_PASSWORD: postgres
                POSTGRES_DB: notes
             ports:
-              - 5432:5432
+               - 5432:5432
             # Set health checks to wait until postgres has started
             options: >-
                --health-cmd pg_isready
@@ -28,4 +28,4 @@ jobs:
          - name: Connect to PostgreSQL
            run: yarn run test:e2e
            env:
-              DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/notes?connect_timeout=30&pool_timeout=30&socket_timeout=30'
+              DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/notes?connect_timeout=30&pool_timeout=30&socket_timeout=30'
