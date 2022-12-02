@@ -1,8 +1,31 @@
 name: Tests
 on: [push, pull_request]
 jobs:
-   tests:
+   container-job:
       runs-on: ubuntu-latest
+      container: node:latest
+      services:
+         # Label used to access the service container
+         postgres:
+            image: postgres
+            env:
+               POSTGRES_PASSWORD: postgres
+               POSTGRES_DB: notes
+            ports:
+               - 5432:5432
+            # Set health checks to wait until postgres has started
+            options: >-
+               --health-cmd pg_isready
+               --health-interval 10s
+               --health-timeout 5s
+               --health-retries 5
       steps:
-         - uses: actions/checkout@v3
-         - run: yarn run docker:up-test
+         - name: Check out repository code
+           uses: actions/checkout@v3
+
+         - name: Install dependencies
+           run: yarn install --frozen-lockfile
+         - name: Connect to PostgreSQL
+           run: yarn run test:e2e
+           env:
+              DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/notes?connect_timeout=30&pool_timeout=30&socket_timeout=30'
